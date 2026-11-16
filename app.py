@@ -309,14 +309,22 @@ div.stFormSubmitButton > button:hover {
 
 
 @st.cache_resource
+
+@st.cache_resource
 def get_collection():
+    def get_setting(name):
+        if name in st.secrets:
+            return st.secrets[name]
+        return os.getenv(name)
+
     client = MongoClient(
-        f"mongodb+srv://{os.getenv('MONGO_HOST')}/",
-        username=os.getenv("MONGO_USER"),
-        password=os.getenv("MONGO_PASSWORD"),
+        f"mongodb+srv://{get_setting('MONGO_HOST')}/",
+        username=get_setting("MONGO_USER"),
+        password=get_setting("MONGO_PASSWORD"),
         authSource="admin",
         serverSelectionTimeoutMS=10000
     )
+
     client.admin.command("ping")
     return client["student_management"]["students"]
 

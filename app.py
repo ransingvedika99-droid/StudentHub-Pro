@@ -515,6 +515,29 @@ page = st.sidebar.radio(
     ]
 )
 
+admin_pages = [
+    "Student Registration",
+    "Update Records",
+    "Delete Records"
+]
+
+if page in admin_pages:
+    st.sidebar.divider()
+    admin_password = st.sidebar.text_input(
+        "Admin Password",
+        type="password"
+    )
+
+    try:
+        correct_password = st.secrets["ADMIN_PASSWORD"]
+    except (KeyError, FileNotFoundError):
+        correct_password = os.getenv("ADMIN_PASSWORD", "")
+
+    if not correct_password or admin_password != correct_password:
+        st.warning("Admin access required to modify student records.")
+        st.stop()
+
+
 st.sidebar.divider()
 st.sidebar.markdown("**SYSTEM STATUS**")
 st.sidebar.success("MongoDB Atlas Connected")
